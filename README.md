@@ -1,1 +1,1 @@
-# nyt_predicting_shared_articles
+# nyt_predicting_sharable_article
