@@ -43,4 +43,4 @@ df_shared = pd.DataFrame(cleaned_most_shared)
 # rename columns to strings 
 df_shared.columns = ['date_sourced', 'uri', 'date_published']
 
-df_shared.to_csv(f'data/most_popular/most_shared_{date_sourced}.csv', index=False) 
+# df_shared.to_csv(f'data/most_popular_train/most_shared_{date_sourced}.csv', index=False) 

@@ -23,4 +23,4 @@ df_articles.dropna(inplace=True)
 # rename columns to strings 
 df_articles.columns = ['uri', 'date_published', 'headline', 'keywords', 'snippet', 'word_count']
 
-df_articles.to_csv('data/article_archive.csv', index=False)
+df_articles.to_csv('data/archive_train.csv', index=False)

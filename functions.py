@@ -1,9 +1,20 @@
  # import needed libraries
 import os
 import requests 
+import re
 import json
+
 import pandas as pd
 import datetime as dt  
+
+from nltk.corpus import stopwords, wordnet
+from nltk.tokenize import RegexpTokenizer
+from nltk.stem import WordNetLemmatizer
+from nltk import pos_tag
+
+from imblearn.over_sampling import SMOTE
+
+import matplotlib.pyplot as plt
 
 
 """
@@ -104,15 +115,17 @@ def load_most_shared(dir_path):
             files.append(filename)
             
     #read them into pandas
-    df_list = [pd.read_csv('data/most_popular/'+file) for file in files]
+    df_list = [pd.read_csv(dir_path+'/'+file) for file in files]
     
     #concatenate them together
-    most_shared_df = pd.concat(df_list)
-    most_shared_df.set_index('date_sourced', inplace=True)
+    df = pd.concat(df_list)
+    df.set_index('date_sourced', inplace=True)
     
-    return most_shared_df
-    
+    return df
 
+    
+    
+    
 
 """
 Sampling funcitons 
@@ -148,8 +161,10 @@ def get_wordnet_pos(treebank_tag):
 # param headline: a single headline
 # return: a headline string with words which have been lemmatized, parsed for 
 # stopwords and stripped of punctuation and numbers.
-def text_prep(text, stop_words=sw):
+
+def text_prep(text, sw):
     
+    sw = stopwords.words('english')
     regex_token = RegexpTokenizer(r"([a-zA-Z]+(?:’[a-z]+)?)")
     text = regex_token.tokenize(text)
     text = [word for word in text]
@@ -159,3 +174,34 @@ def text_prep(text, stop_words=sw):
     lemmatizer = WordNetLemmatizer() 
     text = [lemmatizer.lemmatize(word[0], word[1]) for word in text]
     return ' '.join(text)
+
+
+def vectorize_feature(vectorizer, X_train, X_test):
+    sw = stopwords.words('english')
+    vectorizer = vectorizer(stop_words=sw)
+    
+    X_train_vec = vectorizer.fit_transform(X_train)
+    X_test_vec = vectorizer.transform(X_test)
+    
+    return vectorizer, X_train_vec, X_test_vec
+
+def plot_top_words(vectorizer, X_train):
+    
+    df = pd.DataFrame(X_train.toarray(), columns=vectorizer.get_feature_names())
+    limit = 10
+
+    plt.figure(figsize=(8,10))
+    plot = plt.barh(df.sum().sort_values(ascending=False)[:limit].index, 
+             df.sum().sort_values(ascending=False)[:limit]);
+    
+    return plot
+
+def vector_tokenized(vectorizer, X_train, X_test):
+    sw = stopwords.words('english')
+    
+    vector_tokenized = [text_prep(text, sw) for text in X_train]
+    X_train_token_vec = vectorizer.fit_transform(vector_tokenized)
+    X_test_token_vec = vectorizer.transform(X_test)
+    
+    return X_train_token_vec, X_test_token_vec
+    
