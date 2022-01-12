@@ -67,6 +67,67 @@ def get_most_shared_articles(search_period):
 
 
 """
+EDA funcitons
+""" 
+# function to load most shared articles for eda
+def load_most_shared_eda(dir_path):
+#     'data/most_popular'
+    directory = os.fsencode(dir_path)
+    
+    files = []
+    most_shared_df = pd.DataFrame()
+    
+    for file in os.listdir(directory):
+        filename = os.fsdecode(file)
+        exclude = 'before'
+        if filename.endswith('.csv') and exclude not in filename :
+            files.append(filename)
+            
+    #read them into pandas
+    df_list = [pd.read_csv(dir_path+'/'+file) for file in files]
+    
+    return df_list
+
+# fucntion to clean most shared articles for eda
+def clean_most_shared_eda(df_list):
+    
+    for df in df_list:
+        df.date_published = df.date_published.apply(lambda x: pd.to_datetime(x).date())
+        df.date_sourced = df.date_sourced.apply(lambda x: pd.to_datetime(x).date())
+        df.set_index('date_sourced', inplace=True)
+        df.sort_index(ascending=False, inplace=True)
+        
+    return df_list_cleaned
+
+# function to plot each days most shared articles by count of what day the articles 
+# were origionally published on
+def plot_most_shared(list_df):
+    
+    size = len(list_df)
+    cols = round(math.sqrt(size))
+    rows = cols
+    while rows * cols < size:
+        rows += 1
+    f, ax_arr = plt.subplots(rows, cols)
+    plt.rcParams["figure.figsize"] = (20,20)
+    ax_arr = ax_arr.reshape(-1)
+    for i in range(len(ax_arr)):
+        if i >= size:
+            ax_arr[i].axis('off')
+            break
+
+        list_df[i].groupby('date_published').count().plot(kind='bar', 
+                                                          title=f'Date Sourced: {str(df_list[i].index[1])}', 
+                                                          rot=50, xlabel='Date Published', 
+                                                          ylabel='Number of Articles', ax=ax_arr[i]);
+        ax_arr[i].legend(['Articles'])
+        
+    # plt.subplot_tool();
+
+
+
+
+"""
 Data Cleaning funciton
 """ 
 
