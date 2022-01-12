@@ -5,9 +5,10 @@ import json
 import pandas as pd
 import datetime as dt  
 
-# functions
 
-### file functions ###
+"""
+file functions
+""" 
 
 #function to access private API key
 def get_api_key(path):
@@ -15,7 +16,10 @@ def get_api_key(path):
         return json.load(f)
     
 
-### API request functions ###
+    
+"""
+API request functions
+""" 
 
 # function to get a list of all articles for provided months from API
 def get_articles(year_month):
@@ -51,9 +55,10 @@ def get_most_shared_articles(search_period):
     return most_shared_articles
 
 
-### Data Cleaning funciton ### 
+"""
+Data Cleaning funciton
+""" 
 
-# function to extract only needed information and make strings lowercase 
 def cleaned_articles(archive):
     cleaned = []
     
@@ -62,10 +67,10 @@ def cleaned_articles(archive):
         uri = article['uri']
         date_published = article['pub_date']
         headline = article['headline']['main'].lower()
-        keywords = [x['value'].lower() for x in article['keywords']]
-        section = article['section_name'].lower()
+        keywords = ''.join(x['value'].lower() for x in article['keywords'])
+        snippet = article['snippet']
         word_count = article['word_count']
-        cleaned.append([uri, date_published, headline, keywords, section, word_count])
+        cleaned.append([uri, date_published, headline, keywords, snippet, word_count])
         
     return cleaned
 
@@ -107,5 +112,50 @@ def load_most_shared(dir_path):
     
     return most_shared_df
     
+
+
+"""
+Sampling funcitons 
+""" 
+
+def smote_data(X_train, y_train, sampling_strategy, random_state):
+    smote = SMOTE(sampling_strategy=sampling_strategy, random_state=random_state)
+    X_train_resampled, y_train_resampled = smote.fit_sample(X_train, y_train) 
+    return X_train_resampled, y_train_resampled 
+
+
+"""
+NLP functions
+""" 
+
+# This function the correct Part of Speech so the Lemmatizer in the next function can be more accurate.
+def get_wordnet_pos(treebank_tag):
+    '''
+    Translate nltk POS to wordnet tags
+    '''
+    if treebank_tag.startswith('J'):
+        return wordnet.ADJ
+    elif treebank_tag.startswith('V'):
+        return wordnet.VERB
+    elif treebank_tag.startswith('N'):
+        return wordnet.NOUN
+    elif treebank_tag.startswith('R'):
+        return wordnet.ADV
+    else:
+        return wordnet.NOUN
+
+
+# param headline: a single headline
+# return: a headline string with words which have been lemmatized, parsed for 
+# stopwords and stripped of punctuation and numbers.
+def text_prep(text, stop_words=sw):
     
-    
+    regex_token = RegexpTokenizer(r"([a-zA-Z]+(?:’[a-z]+)?)")
+    text = regex_token.tokenize(text)
+    text = [word for word in text]
+    text = [word for word in text if word not in sw]
+    text = pos_tag(text)
+    text = [(word[0], get_wordnet_pos(word[1])) for word in text]
+    lemmatizer = WordNetLemmatizer() 
+    text = [lemmatizer.lemmatize(word[0], word[1]) for word in text]
+    return ' '.join(text)

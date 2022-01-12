@@ -18,8 +18,9 @@ cleaned_articles = cleaned_articles(articles)
 # put articles in dataframe and drop duplictes, if any 
 df_articles = pd.DataFrame(cleaned_articles)
 df_articles.drop_duplicates(0, inplace=True)
+df_articles.dropna(inplace=True)
 
 # rename columns to strings 
-df_articles.columns = ['uri', 'date_published', 'headline', 'keywords', 'section', 'word_count']
+df_articles.columns = ['uri', 'date_published', 'headline', 'keywords', 'snippet', 'word_count']
 
 df_articles.to_csv('data/article_archive.csv', index=False)
