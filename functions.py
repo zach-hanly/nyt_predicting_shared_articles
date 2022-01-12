@@ -76,7 +76,7 @@ def cleaned_articles(archive):
     # loop through every article and append to empty list 
     for article in archive:
         uri = article['uri']
-        date_published = article['pub_date']
+        date_published = article['pub_date'][:10]
         headline = article['headline']['main'].lower()
         keywords = ''.join(x['value'].lower() for x in article['keywords'])
         snippet = article['snippet']
@@ -119,12 +119,15 @@ def load_most_shared(dir_path):
     
     #concatenate them together
     df = pd.concat(df_list)
+    
+    df.date_published = df.date_published.apply(lambda x: pd.to_datetime(x).date())
+    df.date_sourced = df.date_sourced.apply(lambda x: pd.to_datetime(x).date())
     df.set_index('date_sourced', inplace=True)
     
     return df
 
     
-    
+#     df_most_shared.apply(lambda x: pd.to_datetime(x).date())
     
 
 """
