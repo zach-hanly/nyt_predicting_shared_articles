@@ -4,7 +4,7 @@ import requests
 import re
 import json
 
-import pandas as 
+import pandas as pd
 import math
 
 from nltk.corpus import stopwords, wordnet
@@ -254,7 +254,7 @@ def vector_tokenized(vectorizer, X_train, X_test):
     X_train_token_vec = vectorizer.fit_transform(vector_tokenized)
     X_test_token_vec = vectorizer.transform(X_test)
     
-    return X_train_token_vec, X_test_token_vec
+    return vectorizer, X_train_token_vec, X_test_token_vec
 
 
 def plot_top_words(vectorizer, X_train):
