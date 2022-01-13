@@ -69,7 +69,7 @@ EDA funcitons
 
 # function to load most shared articles for eda
 def load_most_shared_eda(dir_path):
-#     'data/most_popular'
+    
     directory = os.fsencode(dir_path)
     
     files = []
@@ -163,7 +163,7 @@ def cleaned_shared_articles(most_shared_articles):
 
 # function to laod and combine all most shared articles 
 def load_most_shared(dir_path):
-#     'data/most_popular'
+
     directory = os.fsencode(dir_path)
     
     files = []
@@ -184,12 +184,9 @@ def load_most_shared(dir_path):
     df.date_sourced = df.date_sourced.apply(lambda x: pd.to_datetime(x).date())
     df.set_index('date_sourced', inplace=True)
     
-    return df
+    return df    
 
     
-#     df_most_shared.apply(lambda x: pd.to_datetime(x).date())
-    
-
     
 """
 Sampling funcitons 
@@ -250,6 +247,16 @@ def vectorize_feature(vectorizer, X_train, X_test):
     return vectorizer, X_train_vec, X_test_vec
 
 
+def vector_tokenized(vectorizer, X_train, X_test):
+    sw = stopwords.words('english')
+    
+    vector_tokenized = [text_prep(text, sw) for text in X_train]
+    X_train_token_vec = vectorizer.fit_transform(vector_tokenized)
+    X_test_token_vec = vectorizer.transform(X_test)
+    
+    return X_train_token_vec, X_test_token_vec
+
+
 def plot_top_words(vectorizer, X_train):
     
     df = pd.DataFrame(X_train.toarray(), columns=vectorizer.get_feature_names())
@@ -263,12 +270,4 @@ def plot_top_words(vectorizer, X_train):
     plt.ylabel('Words');
 
 
-def vector_tokenized(vectorizer, X_train, X_test):
-    sw = stopwords.words('english')
-    
-    vector_tokenized = [text_prep(text, sw) for text in X_train]
-    X_train_token_vec = vectorizer.fit_transform(vector_tokenized)
-    X_test_token_vec = vectorizer.transform(X_test)
-    
-    return X_train_token_vec, X_test_token_vec
     
