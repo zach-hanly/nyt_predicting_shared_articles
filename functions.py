@@ -247,7 +247,7 @@ def vectorize_feature(vectorizer, X_train, X_test):
     return vectorizer, X_train_vec, X_test_vec
 
 
-def vector_tokenized(vectorizer, X_train, X_test):
+def tokenize_vector(vectorizer, X_train, X_test):
     sw = stopwords.words('english')
     
     vector_tokenized = [text_prep(text, sw) for text in X_train]
