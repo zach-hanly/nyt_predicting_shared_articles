@@ -4,8 +4,8 @@ import requests
 import re
 import json
 
-import pandas as pd
-import datetime as dt  
+import pandas as 
+import math
 
 from nltk.corpus import stopwords, wordnet
 from nltk.tokenize import RegexpTokenizer
@@ -16,22 +16,17 @@ from imblearn.over_sampling import SMOTE
 
 import matplotlib.pyplot as plt
 
-
+     
 """
-file functions
+API request functions
 """ 
 
 #function to access private API key
 def get_api_key(path):
     with open(path) as f:
         return json.load(f)
-    
 
     
-"""
-API request functions
-""" 
-
 # function to get a list of all articles for provided months from API
 def get_articles(year_month):
     articles_list = []
@@ -51,6 +46,7 @@ def get_articles(year_month):
         
     return articles_list 
 
+
 # function to get a list of most shared articles for provided time period (in days)
 def get_most_shared_articles(search_period):
     most_shared_articles = []
@@ -66,9 +62,11 @@ def get_most_shared_articles(search_period):
     return most_shared_articles
 
 
+
 """
 EDA funcitons
 """ 
+
 # function to load most shared articles for eda
 def load_most_shared_eda(dir_path):
 #     'data/most_popular'
@@ -88,6 +86,7 @@ def load_most_shared_eda(dir_path):
     
     return df_list
 
+
 # fucntion to clean most shared articles for eda
 def clean_most_shared_eda(df_list):
     
@@ -96,34 +95,34 @@ def clean_most_shared_eda(df_list):
         df.date_sourced = df.date_sourced.apply(lambda x: pd.to_datetime(x).date())
         df.set_index('date_sourced', inplace=True)
         df.sort_index(ascending=False, inplace=True)
-        
-    return df_list_cleaned
+
+    df_list.sort(key=lambda x: x.index[0])
+    return df_list
+
 
 # function to plot each days most shared articles by count of what day the articles 
 # were origionally published on
-def plot_most_shared(list_df):
+def plot_most_shared(df_list):
     
-    size = len(list_df)
+    size = len(df_list)
     cols = round(math.sqrt(size))
     rows = cols
     while rows * cols < size:
         rows += 1
-    f, ax_arr = plt.subplots(rows, cols)
-    plt.rcParams["figure.figsize"] = (20,20)
+    f, ax_arr = plt.subplots(nrows=rows, ncols=cols, figsize=(20,20))
     ax_arr = ax_arr.reshape(-1)
     for i in range(len(ax_arr)):
         if i >= size:
             ax_arr[i].axis('off')
             break
 
-        list_df[i].groupby('date_published').count().plot(kind='bar', 
+        df_list[i].groupby('date_published').count().plot(kind='bar', 
                                                           title=f'Date Sourced: {str(df_list[i].index[1])}', 
                                                           rot=50, xlabel='Date Published', 
                                                           ylabel='Number of Articles', ax=ax_arr[i]);
         ax_arr[i].legend(['Articles'])
         
-    # plt.subplot_tool();
-
+#     plt.subplot_tool();
 
 
 
@@ -147,7 +146,6 @@ def cleaned_articles(archive):
     return cleaned
 
 
-
 # function to extract only needed information and make strings lowercase 
 def cleaned_shared_articles(most_shared_articles):
     cleaned_articles = []
@@ -161,6 +159,7 @@ def cleaned_shared_articles(most_shared_articles):
         cleaned_articles.append([idx, uri, date_published])
         
     return cleaned_articles
+
 
 # function to laod and combine all most shared articles 
 def load_most_shared(dir_path):
@@ -191,6 +190,7 @@ def load_most_shared(dir_path):
 #     df_most_shared.apply(lambda x: pd.to_datetime(x).date())
     
 
+    
 """
 Sampling funcitons 
 """ 
@@ -199,6 +199,7 @@ def smote_data(X_train, y_train, sampling_strategy, random_state):
     smote = SMOTE(sampling_strategy=sampling_strategy, random_state=random_state)
     X_train_resampled, y_train_resampled = smote.fit_sample(X_train, y_train) 
     return X_train_resampled, y_train_resampled 
+
 
 
 """
@@ -225,7 +226,6 @@ def get_wordnet_pos(treebank_tag):
 # param headline: a single headline
 # return: a headline string with words which have been lemmatized, parsed for 
 # stopwords and stripped of punctuation and numbers.
-
 def text_prep(text, sw):
     
     sw = stopwords.words('english')
@@ -249,16 +249,19 @@ def vectorize_feature(vectorizer, X_train, X_test):
     
     return vectorizer, X_train_vec, X_test_vec
 
+
 def plot_top_words(vectorizer, X_train):
     
     df = pd.DataFrame(X_train.toarray(), columns=vectorizer.get_feature_names())
-    limit = 10
+    limit = 5
 
-    plt.figure(figsize=(8,10))
-    plot = plt.barh(df.sum().sort_values(ascending=False)[:limit].index, 
-             df.sum().sort_values(ascending=False)[:limit]);
-    
-    return plot
+    plt.figure(figsize=(5,5))
+    plt.barh(df.sum().sort_values(ascending=False)[:limit].index, 
+             df.sum().sort_values(ascending=False)[:limit])
+    plt.title(f'Top {str(limit)} Words')
+    plt.xlabel('Word Count')
+    plt.ylabel('Words');
+
 
 def vector_tokenized(vectorizer, X_train, X_test):
     sw = stopwords.words('english')
