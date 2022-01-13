@@ -1,4 +1,4 @@
- # import needed libraries
+ # import required packages
 import os
 import requests 
 import re

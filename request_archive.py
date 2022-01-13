@@ -1,7 +1,7 @@
 """ This script will make a call to the NYT API for the all articles in a given month(s).
 """
 
-# import needed libraries
+# import required packages
 from functions import *   
 import requests 
 import json

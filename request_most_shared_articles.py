@@ -2,7 +2,7 @@
     This must be ran once per day to get the newest top 20 list. 
 """
 
-# import needed libraries
+# import required packages
 from functions import *   
 import requests 
 import json

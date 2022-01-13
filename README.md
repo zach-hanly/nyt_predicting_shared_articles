@@ -1,4 +1,4 @@
-# nyt_predicting_sharable_article 
+# Predicting New York Times Daily Top 20 Most Shared Articles on Facebook 
 
 **Author**: Zach Hanly
 
