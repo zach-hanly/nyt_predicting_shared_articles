@@ -1,4 +1,7 @@
- # import required packages
+"""functions for #nyt_predicting_shared_articles 
+"""
+
+# import required packages
 import os
 import requests 
 import re
@@ -16,7 +19,37 @@ from imblearn.over_sampling import SMOTE
 
 import matplotlib.pyplot as plt
 
-     
+"""
+
+Table of Contents
+
+    API request functions:
+        get_api_key(path)
+        get_articles(year_month)
+        get_most_shared_articles(search_period)
+
+    EDA funcitons:
+        load_most_shared_eda(dir_path)
+        clean_most_shared_eda(df_list)
+        plot_most_shared(df_list)
+
+    Data Cleaning funciton:
+        cleaned_articles(archive)
+        cleaned_shared_articles(most_shared_articles)
+        load_most_shared(dir_path)
+
+    Sampling funcitons:
+        smote_data(X_train, y_train, sampling_strategy, random_state)
+
+    NLP functions:
+        get_wordnet_pos(treebank_tag)
+        text_prep(text, sw)
+        vectorize_feature(vectorizer, X_train, X_test)
+        tokenize_vector(vectorizer, X_train, X_test)
+        plot_top_words(vectorizer, X_train)
+    
+"""
+
 """
 API request functions
 """ 
@@ -110,6 +143,7 @@ def plot_most_shared(df_list):
     while rows * cols < size:
         rows += 1
     f, ax_arr = plt.subplots(nrows=rows, ncols=cols, figsize=(20,20))
+    plt.subplots_adjust(wspace=0.35, hspace=0.35)
     ax_arr = ax_arr.reshape(-1)
     for i in range(len(ax_arr)):
         if i >= size:
@@ -127,7 +161,7 @@ def plot_most_shared(df_list):
 
 
 """
-Data Cleaning funciton
+Data Cleaning funcitons
 """ 
 
 def cleaned_articles(archive):
@@ -161,7 +195,7 @@ def cleaned_shared_articles(most_shared_articles):
     return cleaned_articles
 
 
-# function to laod and combine all most shared articles 
+# function to load and combine all most shared articles 
 def load_most_shared(dir_path):
 
     directory = os.fsencode(dir_path)
@@ -189,7 +223,7 @@ def load_most_shared(dir_path):
     
     
 """
-Sampling funcitons 
+Sampling funciton
 """ 
 
 def smote_data(X_train, y_train, sampling_strategy, random_state):
@@ -202,7 +236,6 @@ def smote_data(X_train, y_train, sampling_strategy, random_state):
 """
 NLP functions
 """ 
-
 # This function the correct Part of Speech so the Lemmatizer in the next function can be more accurate.
 def get_wordnet_pos(treebank_tag):
     '''
