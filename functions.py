@@ -133,6 +133,29 @@ def clean_most_shared_eda(df_list):
     return df_list
 
 
+# function to present and plot distribtuion of values in series
+# automatically prints plot, summary df is returned to unpack and present 
+def summerize_value_counts(series):
+    
+    # extract name of series
+    series_name = series.name
+    
+    # make dataframe to display value count sum and percentage for series 
+    series_count = series.value_counts().rename('sum')
+    series_perc = series.value_counts(normalize=True).round(2).rename('percentage')
+    series_values_df = pd.concat([series_count, series_perc], axis=1)
+    
+    # plot series distribution 
+    plot = series_values_df['sum'].plot(kind='bar', title=f'Distribution of {series_name.title()} Column', 
+                                 xlabel=f'{series_name.title()}', ylabel='Count');
+    
+    # rename df index to series name
+    series_values_df.index.name = series_name
+    series_values_df
+    
+    return series_values_df
+
+
 # function to plot each days most shared articles by count of what day the articles 
 # were origionally published on
 def plot_most_shared(df_list):
