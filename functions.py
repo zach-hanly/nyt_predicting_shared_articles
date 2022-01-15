@@ -259,7 +259,7 @@ def smote_data(X_train, y_train, sampling_strategy, random_state):
 """
 NLP functions
 """ 
-# This function the correct Part of Speech so the Lemmatizer in the next function can be more accurate.
+# This function gets the correct Part of Speech so the Lemmatizer in the next function can be more accurate.
 def get_wordnet_pos(treebank_tag):
     '''
     Translate nltk POS to wordnet tags
@@ -306,8 +306,10 @@ def vectorize_feature(vectorizer, X_train, X_test):
 def tokenize_vector(vectorizer, X_train, X_test):
     sw = stopwords.words('english')
     
-    vector_tokenized = [text_prep(text, sw) for text in X_train]
-    X_train_token_vec = vectorizer.fit_transform(vector_tokenized)
+    vectorizer = vectorizer(stop_words=sw)
+    
+    X_train_tokenized = [text_prep(text, sw) for text in X_train]
+    X_train_token_vec = vectorizer.fit_transform(X_train_tokenized)
     X_test_token_vec = vectorizer.transform(X_test)
     
     return vectorizer, X_train_token_vec, X_test_token_vec
