@@ -256,6 +256,7 @@ def smote_data(X_train, y_train, sampling_strategy, random_state):
 
 
 
+
 """
 NLP functions
 """ 
@@ -315,7 +316,7 @@ def tokenize_vector(vectorizer, X_train, X_test):
     return vectorizer, X_train_token_vec, X_test_token_vec
 
 
-def plot_top_words(vectorizer, X_train):
+def plot_top_words(vectorizer, X_train, title_suffix):
     
     df = pd.DataFrame(X_train.toarray(), columns=vectorizer.get_feature_names())
     limit = 5
@@ -323,7 +324,7 @@ def plot_top_words(vectorizer, X_train):
     plt.figure(figsize=(5,5))
     plt.barh(df.sum().sort_values(ascending=False)[:limit].index, 
              df.sum().sort_values(ascending=False)[:limit])
-    plt.title(f'Top {str(limit)} Words')
+    plt.title(f'Top {str(limit)} Words: {title_suffix}')
     plt.xlabel('Word Count')
     plt.ylabel('Words');
 
