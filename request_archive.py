@@ -20,12 +20,6 @@ cleaned_articles = cleaned_articles(articles)
 
 # put articles in dataframe and drop duplictes, if any 
 df_articles = pd.DataFrame(cleaned_articles)
-df_articles.dropna(inplace=True)
-
-"""uncomment and unindent next two lines to only accept articles with dates after training phase
-"""
-last_training_day = pd.to_datetime('2022/01/15').date()
-df_articles = df_articles[df_articles.date_published > last_training_day]
 
 
 # rename columns to strings 
@@ -36,6 +30,13 @@ df_articles.date_published = df_articles.date_published.apply(lambda x: pd.to_da
 
     # save training data to csv file
     # df_articles.to_csv('data/archive_train.csv', index=False)
+
+    
+"""uncomment and unindent next two lines to only accept articles with dates after training phase
+"""
+last_training_day = pd.to_datetime('2022/01/15').date()
+df_articles = df_articles[df_articles.date_published > last_training_day]    
+    
 
 """ uncoment and unindent next line to save delpoyment archive data to a seperate file. 
     comment line above to prevent delpoyment data from leaking into training file.
