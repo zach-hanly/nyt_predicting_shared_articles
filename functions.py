@@ -182,6 +182,38 @@ def plot_most_shared(df_list):
 #     plt.subplot_tool();
 
 
+def top_20_delta_perc(df_list):
+    
+    date_list = []
+    for df in df_list:
+        day_sourced = df.index[0]
+        value_count = df.date_published.value_counts()
+        time_delta = [day_sourced - date for date in value_count.index]
+        date_dict = {k:v for k,v in list(zip(time_delta, value_count.values))}
+        date_series = pd.Series(date_dict, name=str(day_sourced))
+        date_list.append(date_series)
+        
+    top20_delta_df = pd.DataFrame(date_list).T
+    num_days = len(top20_delta_df.columns)
+    top20_delta_df['percentage'] = 0
+    top20_delta_df.fillna(0, inplace=True)
+    top20_delta_df['percentage'] = round((top20_delta_df.sum(axis=1))/(num_days*20), 4)
+    delta = top20_delta_df.percentage
+    
+    X = [str(x)+' days' for x in list(delta.index.days)]
+    plt.bar(X, delta.values)
+    plt.title('Time Delta Distribution', size=20, pad=10)
+    plt.xlabel('Days Published Before Day on Top 20', size=13, labelpad=10)
+    plt.ylabel('Percentage of Total Articles', size=13, labelpad=10)
+    plt.xticks(size=10)
+    plt.yticks([0, .10, .20, .30, .40, .50], labels=['0%', '10%', '20%', '30%', '40%', '50%'], size=10)
+    plt.legend(['Articles'], prop={'size': 10});
+    
+  
+    return delta, delta.round(2).apply(lambda x: str(int(x*100))+'%').to_frame()
+
+
+
 
 """
 Data Cleaning funcitons
