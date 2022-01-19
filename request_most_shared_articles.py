@@ -43,10 +43,10 @@ df_shared = pd.DataFrame(cleaned_most_shared)
 df_shared.columns = ['date_sourced', 'uri', 'date_published']
 
 # save file to folder in data directory 
-df_shared.to_csv(f'data/most_popular_train/most_shared_{date_sourced}.csv', index=False) 
+# df_shared.to_csv(f'data/most_popular_train/most_shared_{date_sourced}.csv', index=False) 
 
 
 """ uncoment and unindent next line to divert top 20 lists for deployment into a different folder.
     comment line above to prevent delpoyment data from leaking into training folder.
 """
-    # df_shared.to_csv(f'data/most_popular_deploy/most_shared_{date_sourced}.csv', index=False) 
+df_shared.to_csv(f'data/most_popular_deploy/most_shared_{date_sourced}.csv', index=False) 

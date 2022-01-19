@@ -13,7 +13,7 @@ import pandas as pd
 """
 article_dates_train = [(2021, 12), (2022, 1)]
 article_dates_deploy = [(2022, 1)]
-articles = get_articles(article_dates_deploy)
+articles = get_articles(article_dates_train)
 
 # pass list of articles through cleaning function 
 cleaned_articles = cleaned_articles(articles)
@@ -28,16 +28,22 @@ df_articles.columns = ['uri', 'date_published', 'headline', 'keywords', 'snippet
 # convert date_published to datetime dtype
 df_articles.date_published = df_articles.date_published.apply(lambda x: pd.to_datetime(x).date())
 
-    # save training data to csv file
-    # df_articles.to_csv('data/archive_train.csv', index=False)
-
+    # archive_train cutoff
+    # last_training_day = pd.to_datetime('2022/01/18').date()
+    # df_articles = df_articles[df_articles.date_published <= last_training_day]    
     
-"""uncomment and unindent next two lines to only accept articles with dates after training phase
+
+"""uncomment and unindent next two lines to only accept articles with dates 3 days before training phase ends
 """
-last_training_day = pd.to_datetime('2022/01/15').date()
-df_articles = df_articles[df_articles.date_published > last_training_day]    
-    
+deploy_cutoff = pd.to_datetime('2022/01/16').date()
+df_articles = df_articles[df_articles.date_published >= deploy_cutoff] 
 
+    
+    
+# save training data to csv file
+# df_articles.to_csv('data/archive_train.csv', index=False)
+    
+    
 """ uncoment and unindent next line to save delpoyment archive data to a seperate file. 
     comment line above to prevent delpoyment data from leaking into training file.
 """
