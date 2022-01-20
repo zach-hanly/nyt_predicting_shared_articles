@@ -48,6 +48,9 @@ Table of Contents
         tokenize_vector(vectorizer, X_train, X_test)
         plot_top_words(vectorizer, X_train)
     
+    Deploy Function 
+    
+    
 """
 
 """
@@ -362,3 +365,45 @@ def plot_top_words(vectorizer, X_train, title_suffix):
 
 
     
+"""
+Deploy functions 
+"""
+
+# function to load most shared articles for eda
+def load_predictions(dir_path):
+    
+    directory = os.fsencode(dir_path)
+    
+    files = []
+    pred_df = pd.DataFrame()
+    
+    for file in os.listdir(directory):
+        filename = os.fsdecode(file)
+        if filename.endswith('.csv'):
+            files.append(filename)
+            
+    #read them into pandas
+    df_list = [pd.read_csv(dir_path+'/'+file) for file in files]
+    plot_df = pd.concat(df_list)
+    plot_df.set_index(plot_df.columns[0], inplace=True)
+    plot_df.index.name = 'date'
+    
+    return plot_df
+
+
+def plot_predictions(df):
+    
+    times = pd.date_range(df.index[0], periods=len(df.index))
+
+    proba_tf_pipe = df.proba_tf_pipe
+    class_cv_pipe = df.class_cv_pipe
+    df = pd.DataFrame({'Tfidf Pipeline': df.proba_tf_pipe, 'CountVectorizer Pipeline': df.class_cv_pipe})
+
+    ax = df.plot.bar(color=['SkyBlue','IndianRed'], rot=0, title='Too 20 Articles Predictions')
+
+    ax.set_xlabel('Prediction Day')
+    ax.set_ylabel('Percentage Correct')
+    plt.yticks([0,0.1,0.2,0.3,0.4,0.5], 
+                   ['0%', '10%', '20%', '30%', '40%', '50%'])
+              
+    ax.xaxis.set_major_formatter(plt.FixedFormatter(times.strftime("%b %d %Y"))

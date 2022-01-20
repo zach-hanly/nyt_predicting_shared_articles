@@ -25,7 +25,7 @@ date_sourced = date_sourced.replace('/','_')
 
     # df_shared_before.columns = ['date_sourced', 'uri', 'date_published']
 
-    # df_shared_before.to_csv(f'data/most_popular/most_shared_before{date_sourced}.csv', index=False)
+    # df_shared_before.to_csv(f'data/most_popular_train/most_shared_before{date_sourced}.csv', index=False)
 
     
 """ Daily top 20 list starts below 

@@ -13,7 +13,7 @@ import pandas as pd
 """
 article_dates_train = [(2021, 12), (2022, 1)]
 article_dates_deploy = [(2022, 1)]
-articles = get_articles(article_dates_train)
+articles = get_articles(article_dates_deploy)
 
 # pass list of articles through cleaning function 
 cleaned_articles = cleaned_articles(articles)
@@ -28,9 +28,9 @@ df_articles.columns = ['uri', 'date_published', 'headline', 'keywords', 'snippet
 # convert date_published to datetime dtype
 df_articles.date_published = df_articles.date_published.apply(lambda x: pd.to_datetime(x).date())
 
-    # archive_train cutoff
-    # last_training_day = pd.to_datetime('2022/01/18').date()
-    # df_articles = df_articles[df_articles.date_published <= last_training_day]    
+# archive_train cutoff
+# last_training_day = pd.to_datetime('2022/01/16').date()
+# df_articles = df_articles[df_articles.date_published <= last_training_day]    
     
 
 """uncomment and unindent next two lines to only accept articles with dates 3 days before training phase ends
