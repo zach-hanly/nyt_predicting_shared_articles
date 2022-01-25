@@ -19,7 +19,7 @@ Two identical looking pipelines were used. One using a TfidfVectorizer which con
 #### Diagram
 ![model diagram](images/model_diagram.png)
 
-
+<br>
 After training and testing the pipelines with a train-test split, the pipelines attempted to predict several day's Top 20 list. 
 #### Results 
 ![model results](images/model_results.png)
