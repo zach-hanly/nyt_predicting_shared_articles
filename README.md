@@ -1,10 +1,10 @@
-# Predicting New York Times Daily Top 20 Most Shared Articles on Facebook 
+# Predicting The New York Time's Most Shared Articles
 
 **Author**: Zach Hanly
 
 ## Overview
 
-This project takes article inofmration from the New York times and uses NLP, Random Forest's and logistic regression to predict the daily top 20 most shared articles on Facebook. 
+This project takes article information from the New York times and uses NLP, Random Forests and logistic regression to predict the daily top 20 most shared articles on Facebook. 
 
 ## Business and Data Understanding
 
@@ -25,7 +25,7 @@ Two identical looking pipelines were used. One using a TfidfVectorizer which con
 
 ## Conclusion
 
-The pipeline using the TfidfVectorizer modeled to probabilities outperformed the pipline using the CountVectorizer modeled to class labeles. 
+The pipeline using the TfidfVectorizer modeled to probabilities outperformed the pipeline using the CountVectorizer modeled to class labels. 
 
 
 ## For More Information
