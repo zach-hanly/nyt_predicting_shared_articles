@@ -14,7 +14,7 @@ Two APIs were used. First, the __[NYT Archive API](https://developer.nytimes.com
 
 ## Modeling
 
-![image](images/model_comp.png)
+![model results](images/model_results.png)
 
 ## Conclusion
 
@@ -22,7 +22,7 @@ Two APIs were used. First, the __[NYT Archive API](https://developer.nytimes.com
 
 ## For More Information
 
-Please review the full analysis in my [Jupyter Notebook](./notebook.ipynb) or my [presentation](./presentation.pdf).
+Please review the full analysis in my [Jupyter Notebook](./main_notebook.ipynb) or my [presentation](./presentation.pdf).
 
 ## Repository Structure
 

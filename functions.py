@@ -217,6 +217,18 @@ def top_20_delta_perc(df_list):
 
 
 
+def plot_word_cloud(text_column, mask_path):
+    
+    image = cv2.imread(mask_path, 1)
+    text = ' '.join([x for x in text_column])
+    
+    wordcloud = WordCloud(background_color='white', mask=image, mode="RGB", 
+                          max_words=100, height=1000, random_state=0).generate(text)
+    plt.figure(figsize=(10,10))
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
+
+
 
 """
 Data Cleaning funcitons
@@ -398,6 +410,7 @@ def plot_predictions(df):
     proba_tf_pipe = df.proba_tf_pipe
     class_cv_pipe = df.class_cv_pipe
     df = pd.DataFrame({'Tfidf Pipeline': df.proba_tf_pipe, 'CountVectorizer Pipeline': df.class_cv_pipe})
+    figsize=(10,10)
 
     ax = df.plot.bar(color=['SkyBlue','IndianRed'], rot=0, title='Too 20 Articles Predictions')
 
@@ -406,4 +419,41 @@ def plot_predictions(df):
     plt.yticks([0,0.1,0.2,0.3,0.4,0.5], 
                    ['0%', '10%', '20%', '30%', '40%', '50%'])
               
-    ax.xaxis.set_major_formatter(plt.FixedFormatter(times.strftime("%b %d %Y"))
+#     ax.xaxis.set_major_formatter(plt.FixedFormatter(times.strftime("%b %d %Y"))
+
+# function to load most shared articles for eda
+def load_predictions(dir_path):
+    
+    directory = os.fsencode(dir_path)
+    
+    files = []
+    pred_df = pd.DataFrame()
+    
+    for file in os.listdir(directory):
+        filename = os.fsdecode(file)
+        if filename.endswith('.csv'):
+            files.append(filename)
+            
+    #read them into pandas
+    df_list = [pd.read_csv(dir_path+'/'+file) for file in files]
+    plot_df = pd.concat(df_list)
+    plot_df.set_index(plot_df.columns[0], inplace=True)
+    plot_df.index.name = 'date'
+    
+    return plot_df
+
+
+def plot_predictions(df):
+
+    proba_tf_pipe = df.proba_tf_pipe
+    class_cv_pipe = df.class_cv_pipe
+    df = pd.DataFrame({'Tfidf Pipeline': df.proba_tf_pipe, 'CountVectorizer Pipeline': df.class_cv_pipe})
+
+    ax = df.plot.bar(color=['SkyBlue','IndianRed'], rot=0, title='Too 20 Articles Predictions')
+
+    ax.set_xlabel('Prediction Day')
+    ax.set_ylabel('Percentage Correct')
+    plt.yticks([0,0.1,0.2,0.3,0.4,0.5], 
+                   ['0%', '10%', '20%', '30%', '40%', '50%'])
+    plt.figure(figsize=(20,20))
+              
