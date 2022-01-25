@@ -14,9 +14,9 @@ Two APIs were used. First, the __[NYT Archive API](https://developer.nytimes.com
 
 ## Modeling
 
-#### Diagram
 Two identical looking pipelines were used. One using a TfidfVectorizer which converted text features to floating point values and the other using a CountVectorizer that converted text to binary values. Each feature then went into its own model, where the TfidfVectorizer pipeline turned article features into a probability that the article would be on the top 20 most shared on facebook list, while the CountVecotized pipeline turned them into a binary class label. Both pipeline ends at a logistic regression model that outputs the probability that the article with all its converted features is a top 20 article. This final model is where the word count feature is joined in from its logistic regression model, turned into either a probability or a class label for the respective pipelines. 
 
+#### Diagram
 ![model diagram](images/model_diagram.png)
 
 
@@ -25,6 +25,7 @@ Two identical looking pipelines were used. One using a TfidfVectorizer which con
 
 ## Conclusion
 
+The pipeline using the TfidfVectorizer modeled to probabilities outperformed the pipline using the CountVectorizer modeled to class labeles. 
 
 
 ## For More Information
