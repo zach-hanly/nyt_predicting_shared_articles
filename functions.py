@@ -18,6 +18,8 @@ from nltk import pos_tag
 from imblearn.over_sampling import SMOTE
 
 import matplotlib.pyplot as plt
+import cv2
+from wordcloud import WordCloud 
 
 """
 
@@ -213,7 +215,7 @@ def top_20_delta_perc(df_list):
     plt.legend(['Articles'], prop={'size': 10});
     
   
-    return delta, delta.round(2).apply(lambda x: str(int(x*100))+'%').to_frame()
+    return delta.round(2).apply(lambda x: str(int(x*100))+'%').to_frame()
 
 
 
@@ -410,16 +412,34 @@ def plot_predictions(df):
     proba_tf_pipe = df.proba_tf_pipe
     class_cv_pipe = df.class_cv_pipe
     df = pd.DataFrame({'Tfidf Pipeline': df.proba_tf_pipe, 'CountVectorizer Pipeline': df.class_cv_pipe})
-    figsize=(10,10)
 
-    ax = df.plot.bar(color=['SkyBlue','IndianRed'], rot=0, title='Too 20 Articles Predictions')
+    ax = df.plot.bar(color=['SkyBlue','IndianRed'], title='Too 20 Articles Predictions')
+    plt.xticks(rotation=45)
 
     ax.set_xlabel('Prediction Day')
     ax.set_ylabel('Percentage Correct')
     plt.yticks([0,0.1,0.2,0.3,0.4,0.5], 
                    ['0%', '10%', '20%', '30%', '40%', '50%'])
               
-#     ax.xaxis.set_major_formatter(plt.FixedFormatter(times.strftime("%b %d %Y"))
+
+        
+def score_top20_pred(top_20_from_proba, top_20_from_class, df_top_20):
+    
+    date = df_top_20.index[0]
+    
+    proba_tf_pipe = [1 if x in df_top_20.uri.values else 0 for x in top_20_from_proba.uri.values]
+    proba_tf_pipe_perc = sum(proba_tf_pipe)/len(proba_tf_pipe)
+    class_cv_pipe = [1 if x in df_top_20.uri.values else 0 for x in top_20_from_class.uri.values]
+    class_cv_pipe_perc = sum(class_cv_pipe)/len(class_cv_pipe)
+    
+    pred_series = pd.Series({'proba_tf_pipe': proba_tf_pipe_perc, 'class_cv_pipe': class_cv_pipe_perc}, 
+                            name=str(date))
+    
+    feedback = pd.DataFrame()
+    
+    return pred_series
+
+
 
 # function to load most shared articles for eda
 def load_predictions(dir_path):
@@ -441,19 +461,4 @@ def load_predictions(dir_path):
     plot_df.index.name = 'date'
     
     return plot_df
-
-
-def plot_predictions(df):
-
-    proba_tf_pipe = df.proba_tf_pipe
-    class_cv_pipe = df.class_cv_pipe
-    df = pd.DataFrame({'Tfidf Pipeline': df.proba_tf_pipe, 'CountVectorizer Pipeline': df.class_cv_pipe})
-
-    ax = df.plot.bar(color=['SkyBlue','IndianRed'], rot=0, title='Too 20 Articles Predictions')
-
-    ax.set_xlabel('Prediction Day')
-    ax.set_ylabel('Percentage Correct')
-    plt.yticks([0,0.1,0.2,0.3,0.4,0.5], 
-                   ['0%', '10%', '20%', '30%', '40%', '50%'])
-    plt.figure(figsize=(20,20))
               
