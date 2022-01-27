@@ -224,7 +224,7 @@ def plot_word_cloud(text_column, mask_path):
     image = cv2.imread(mask_path, 1)
     text = ' '.join([x for x in text_column])
     
-    wordcloud = WordCloud(background_color='white', mask=image, mode="RGB", 
+    wordcloud = WordCloud(background_color=None, mask=image, mode = "RGBA", 
                           max_words=100, height=1000, random_state=0).generate(text)
     plt.figure(figsize=(10,10))
     plt.imshow(wordcloud, interpolation='bilinear')
