@@ -43,7 +43,7 @@ Please review the full analysis in my [Jupyter Notebook](./main_notebook.ipynb) 
 ├── README.md                 <- The top-level README for reviewers of this project
 ├── functions.py              <- created functions for project  
 ├── main_notebook.ipynb       <- Narrative documentation of modeling
+├── presentation.pdf          <- PDF version of project 
 ├── request_archive.py        <- collects arichive of articles
 ├── request_most_shared.py    <- collects daily top 20 most shared article son facebook
-├── presentation.pdf          <- PDF version of project 
 ```# nyt_predicting_sharable_article
